@@ -1,6 +1,6 @@
 # -*- Mode: perl -*-
 #
-# $Id: Cfg.pm,v 0.1 2001/03/31 10:04:36 ram Exp $
+# $Id: Cfg.pm,v 0.1.1.1 2001/07/13 17:05:28 ram Exp $
 #
 #  Copyright (c) 2000-2001, Christophe Dehaudt & Raphael Manfredi
 #  
@@ -9,6 +9,9 @@
 #
 # HISTORY
 # $Log: Cfg.pm,v $
+# Revision 0.1.1.1  2001/07/13 17:05:28  ram
+# patch2: random cleanup (from CDE)
+#
 # Revision 0.1  2001/03/31 10:04:36  ram
 # Baseline for first Alpha release.
 #
@@ -417,11 +420,11 @@ By using DLOAD_CONFIG function in your application's main file,
 a debugging configuration can be dynamically loaded to define particular
 level of debug/trace flags for specific sub-part of code.
 
-For instance, the tracing can be turned off when entering in a routine of
-a designated package. That is very useful to concentrate the debugging
-onto the area that is presently developed and/or to filter some verbose
-parts of code (recursive function call), when they don't require to be
-monitored to fix a problem.
+For instance, the tracing can be turned off when entering in a routine
+of a designated package. That is very useful to concentrate the
+debugging onto the area that is presently developped and/or to filter
+some verbose parts of code (recursive function call), when they don't
+require to be monitored to fix the problem.
 
 =head1 EXAMPLE
 

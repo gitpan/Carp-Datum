@@ -1,6 +1,6 @@
 # -*- Mode: perl -*-
 #
-# $Id: Datum.pm,v 0.1.1.1 2001/05/30 21:09:36 ram Exp $
+# $Id: Datum.pm,v 0.1.1.2 2001/07/13 17:04:58 ram Exp $
 #
 #  Copyright (c) 2000-2001, Christophe Dehaudt & Raphael Manfredi
 #  
@@ -9,6 +9,12 @@
 #
 # HISTORY
 # $Log: Datum.pm,v $
+# Revision 0.1.1.2  2001/07/13 17:04:58  ram
+# patch2: integrated mods made by CDE:
+# patch2:  added DEBUG CONFIGURATION section
+# patch2:  added HISTORY AND CREDITS section
+# patch2:  fixed demo script to include leading DFEATURE call
+#
 # Revision 0.1.1.1  2001/05/30 21:09:36  ram
 # patch1: added LIMITATIONS section to warn about stringify overloading
 #
@@ -419,7 +425,7 @@ sub assert {
 	#
 	# Here, we get an assertion failure, an exceptional event.  It's ok
 	# to impose a further delay.
-	#
+	# 
 
 	require Carp::Datum::Assert;
 	Carp::Datum::Assert->import(qw(assert_expr stack_dump));
@@ -659,49 +665,53 @@ to a file separate from both STDOUT and STDERR.
 First, the script, with line number:
 
   1 #!/usr/bin/perl
-  2 
+  2
   3 use Carp::Datum qw(:all on);
-  4 
-  5 show_inv(2, 0.5, 0);
-  6 
-  7 sub show_inv {
-  8     DFEATURE my $f_;
-  9     foreach (@_) {
- 10         print "Inverse of $_ is ", inv($_), "\n";
- 11     }
- 12     return DVOID;
- 13 }
- 14 
- 15 sub inv {
- 16     DFEATURE my $f_;
- 17     my ($x) = @_;
- 18     DREQUIRE $x != 0, "x=$x not null";
- 19     return DVAL 1 / $x;
- 20 }
- 21 
+  4
+  5 DFEATURE my $f_;
+  6
+  7 show_inv(2, 0.5, 0);
+  8
+  9 sub show_inv {
+ 10      DFEATURE my $f_;
+ 11      foreach (@_) {
+ 12          print "Inverse of $_ is ", inv($_), "\n";
+ 13      }
+ 14      return DVOID;
+ 15 }
+ 16
+ 17  sub inv {
+ 18      DFEATURE my $f_;
+ 19      my ($x) = @_;
+ 20      DREQUIRE $x != 0, "x=$x not null";
+ 21      return DVAL 1 / $x;
+ 22  }
+ 23
 
 What goes to STDOUT:
 
  Inverse of 2 is 0.5
  Inverse of 0.5 is 2
+ FATAL: PANIC: pre-condition FAILED: x=0 not null ($x != 0) [./demo:20]
 
 The debugging output on STDERR:
 
-    +-> main::show_inv(2, 0.5, 0) from global at demo:5 [demo:8]
-    |  +-> main::inv(2) from main::show_inv() at demo:10 [demo:16]
-    |  |  Returning: (0.5) [demo:19]
-    |  +-< main::inv(2) from main::show_inv() at demo:10
-    |  +-> main::inv(0.5) from main::show_inv() at demo:10 [demo:16]
-    |  |  Returning: (2) [demo:19]
-    |  +-< main::inv(0.5) from main::show_inv() at demo:10
-    |  +-> main::inv(0) from main::show_inv() at demo:10 [demo:16]
- !! |  |  pre-condition FAILED: argument 0 not null ($x != 0) [demo:18]
- !! |  |  main::inv(0) called at demo line 10
- !! |  |  main::show_inv(2, 0.5, 0) called at demo line 5
- ** |  |  FATAL: PANIC: pre-condition FAILED: x=0 not null ($x != 0) [demo:18]
-    |  +-< main::inv(0) from main::show_inv() at demo:10
-    +-< main::show_inv(2, 0.5, 0) from global at demo:5
-    PANIC: pre-condition FAILED: x=0 not null ($x != 0) [demo:18]
+    +-> global [./demo:5]
+    |  +-> main::show_inv(2, 0.5, 0) from global at ./demo:7 [./demo:10]
+    |  |  +-> main::inv(2) from main::show_inv() at ./demo:12 [./demo:18]
+    |  |  |  Returning: (0.5) [./demo:21]
+    |  |  +-< main::inv(2) from main::show_inv() at ./demo:12
+    |  |  +-> main::inv(0.5) from main::show_inv() at ./demo:12 [./demo:18]
+    |  |  |  Returning: (2) [./demo:21]
+    |  |  +-< main::inv(0.5) from main::show_inv() at ./demo:12
+    |  |  +-> main::inv(0) from main::show_inv() at ./demo:12 [./demo:18]
+ !! |  |  |  pre-condition FAILED: x=0 not null ($x != 0) [./demo:20]
+ !! |  |  |  main::inv(0) called at ./demo line 12
+ !! |  |  |  main::show_inv(2, 0.5, 0) called at ./demo line 7
+ ** |  |  |  FATAL: PANIC: pre-condition FAILED: x=0 not null ($x != 0) [./demo:20]
+    |  |  +-< main::inv(0) from main::show_inv() at ./demo:12
+    |  +-< main::show_inv(2, 0.5, 0) from global at ./demo:7
+    +-< global
 
 The last three lines were manually re-ordered for this manpage: because of the
 pre-condition failure, Perl enters its global object destruction routine,
@@ -714,11 +724,13 @@ Note that the stack dump is prefixed with the "!!" token, and the fatal
 error is tagged with "**".  This is a visual aid only, to quickly locate
 troubles in logfiles by catching the eye.
 
-Routine entry and exit are tagged, returned values and parameters are shown,
-and the immediate caller of each routine is also traced.  The final [demo:8]
-tags refer to the file name (here the script I used was called "demo") and
-the line number where the call to the C<Carp::Datum> routine is made: here
-the C<DFEATURE> at line 8.
+Routine entry and exit are tagged, returned values and parameters are
+shown, and the immediate caller of each routine is also traced.  The
+final tags C<from global at ./demo:7 [./demo:10]> refer to the file
+name (here the script I used was called "demo") and the line number
+where the call to the C<Carp::Datum> routine is made: here the
+C<DFEATURE> at line 10. It also indicates the caller origin: here, the
+call is made at line 7 of file C<demo>.
 
 The special name "global" (without trailing () marker) is used to indicate
 that the caller is the main script, i.e. there is no calling routine.
@@ -1031,6 +1043,69 @@ arguments are evaluated, and there is no short-circuit when I<expr1> is false.
 
 =back
 
+=head1 DEBUG CONFIGURATION
+
+=head2 Global Switch on/off
+
+The C<Carp::Datum> module can be turned on/off. This indication must
+be included when the module is imported in the main program as
+followed:
+
+ # In application's main
+ use Carp::Datum qw(:all on);      # to turn on
+ use Carp::Datum qw(:all off);     # to turn off
+
+When C<Carp::Datum> is turned off, most of the specific functions
+(DFEATURE, ...) continue to be invoked during the program execution
+but they immediately return. In details, all the tracing functions are
+disconnected, the contracts (DASSERT, DREQUIRE, DENSURE) continue to
+be verified: assertion failure will stop the program.
+
+That leads to a tiny perfomance loss when running production
+release. But, the delivered code keeps the possibility to be easily
+debug. There is, however, a stripper program that can extract all the
+C<Carp::Datum> calls from a source file and, then regain in
+performance (see L<Carp::Datum::Strip>).
+
+To turn on/off the debug according to an environment variable, the  
+module can be imported like the following:
+
+ # In application's main
+ use Carp::Datum (":all", $ENV{DATUM});
+
+ # as a preamble to the program execution 
+ # in your favorite shell (here /bin/ksh)
+ export DATUM=on        # to turn on
+ export DATUM=off       # to turn off
+
+=head2 Dynamic Configuration
+
+The dynamic configuration is loaded when the C<DLOAD_CONFIG> function
+is invoked in the main program. The function signature allows to pass
+either a filename or directly a string (or both). 
+
+ DLOAD_CONFIG(-file => "./debug.cf")  # filename
+  - or -
+ DLOAD_CONFIG(-config => <<EOM);      # string
+ routine "show_inv" {
+     all(yes);
+     flow(no);
+     trace(no);
+     return(no);
+ }
+ EOM
+
+The syntax used in the file or the one of the config string is
+described in L<Carp::Datum::Cfg>.
+
+The dynamic setting allows to filter the debug traces when
+running. For instance, one can enforce a routine to be silent.
+
+As an important note, the dynamic configuration is effective only when
+the global debug switch is turned on.
+
+=back
+
 =head1 LIMITATIONS
 
 It's not possible to insert tracing hooks like C<DFEATURE> or C<DVAL>
@@ -1043,6 +1118,34 @@ cannot be used.
 =head1 BUGS
 
 Please report them to the authors.
+
+=head1 HISTORY AND CREDITS
+
+The seed of the C<Carp::Datum> module has started to grow in 1996 when
+Raphael and I were involved into a quite tricky development in a kernel
+environment. It was the first time I heard about I<Programming By Contract>
+principles. For Raphael, the concept was already known since
+he participated to the development of the Eiffel compiler.
+
+Written in C, the first release was based on pre-processor macros. It
+already distinguished the pre-conditions, post-conditions and
+assertions. There were also the concept of dynamic configuration and
+flow tracing. The benefit of this lonely include file was very
+important since the final integration was very short and, since then,
+there was no major bug reported on the delivered product.
+
+Based on this first success, we leveraged the technics for
+developments in C++ language. The debug module was upgraded with the
+necessary notions required for true OO programming in C++.
+
+The Perl module was produced in 2000, when Raphael and I needed for Perl the
+same powerful support that we had initiated a few years ago.
+Before the first official release in spring 2001, we developped
+several other Perl modules and applications (mainly related to CGI
+programming) that were powered by C<Carp::Datum>. Some of them have
+also been published in CPAN directory (for instance:
+C<CGI::Mxscreen>).
+
 
 =head1 AUTHORS
 

@@ -1,3 +1,14 @@
+Fri Jul 13 19:06:15 MEST 2001   Christophe Dehaudt <christophe@dehaudt.org>
+
+. Description:
+
+	Added DEBUG CONFIGURATION and HISTORY AND CREDITS sections
+	in the main manpage.
+
+	Fixed demo script to include leading DFEATURE call.
+
+	Random cleanup in Datum::Cfg documentation.
+
 Wed May 30 23:10:54 MEST 2001   Raphael Manfredi <Raphael_Manfredi@pobox.com>
 
 . Description:
