@@ -1,6 +1,6 @@
 # -*- Mode: perl -*-
 #
-# $Id: Datum.pm,v 0.1 2001/03/31 10:04:36 ram Exp $
+# $Id: Datum.pm,v 0.1.1.1 2001/05/30 21:09:36 ram Exp $
 #
 #  Copyright (c) 2000-2001, Christophe Dehaudt & Raphael Manfredi
 #  
@@ -9,6 +9,9 @@
 #
 # HISTORY
 # $Log: Datum.pm,v $
+# Revision 0.1.1.1  2001/05/30 21:09:36  ram
+# patch1: added LIMITATIONS section to warn about stringify overloading
+#
 # Revision 0.1  2001/03/31 10:04:36  ram
 # Baseline for first Alpha release.
 #
@@ -20,7 +23,7 @@ use strict;
 package Carp::Datum;
 
 use vars qw($VERSION);
-$VERSION = '0.100';
+$VERSION = '0.101';
 
 use Log::Agent;
 use Log::Agent qw(logwrite);
@@ -1027,6 +1030,15 @@ Warning: this is function, not a macro.  That is to say, both
 arguments are evaluated, and there is no short-circuit when I<expr1> is false.
 
 =back
+
+=head1 LIMITATIONS
+
+It's not possible to insert tracing hooks like C<DFEATURE> or C<DVAL>
+in stringification overloading routines.  For C<DFEATURE>, that is because
+the argument list might be dumped, and printing C<$self> will re-invoke
+the stringification routine recursively.  For C<DVAL>, this is implied by
+the fact that there cannot be any C<DFEATURE> in the routine, hence C<DVAL>
+cannot be used.
 
 =head1 BUGS
 
