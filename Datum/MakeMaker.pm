@@ -100,12 +100,12 @@ Carp::Datum::MakeMaker - Offer to strip Carp::Datum calls statically
 The C<Carp::Datum::MakeMaker> module supersedes the regular WriteMakefile()
 routine of C<ExtUtils::MakeMaker>.
 
-When running the Makefile.PL from your module interactively, the user will
+When running the Makefile.PL from a module interactively, the user will
 be asked whether calls to C<Carp::Datum> should be stripped at build time.
 
 By default, or when running non-interactively, most calls to Carp::Datum
 routines will be removed:
-the C<datum_strip> program will be invoked to filter your *.pm files during
+the C<datum_strip> program will be invoked to filter *.pm files during
 the build process.  This program is a mere wrapper for the datum_strip()
 routine, defined in C<Carp::Datum::Strip>.
 
@@ -113,14 +113,14 @@ The only call that will not be stripped is the DTRACE() call.  However, it
 will be dynamically remapped to a C<Log::Agent> call.  It cannot be statically
 remapped because of its baroque interface.
 
-At the top of your Makefile.PL, you should put
+At the top of Makefile.PL, insert 
 
     use Carp::Datum::MakeMaker;
 
-which will take care of loading C<ExtUtils::MakeMaker> for you.  Note that
-it makes sense to refer to this module, since you're using C<Carp::Datum>
-internally, and therefore the user will not be able to install your module
-if he does not have C<Carp::Datum> already installed.
+which will take care of loading C<ExtUtils::MakeMaker>.  Note that
+it makes sense to refer to this module, since C<Carp::Datum> is being used
+internally, and therefore the user will not be able to install the module
+if they do not have C<Carp::Datum> already installed.
 
 If you wish to be nicer about C<Carp::Datum> not being installed, you
 can say instead:
@@ -141,9 +141,9 @@ much farther though...
 
 =head1 AUTHORS
 
-Christophe Dehaudt F<E<lt>christophe@dehaudt.orgE<gt>>
-and
-Raphael Manfredi F<E<lt>Raphael_Manfredi@pobox.comE<gt>>.
+Christophe Dehaudt and Raphael Manfredi are the original authors.
+
+Send bug reports, hints, tips, suggestions to Dave Hoover at <squirrel@cpan.org>.
 
 =head1 SEE ALSO
 

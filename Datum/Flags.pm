@@ -96,9 +96,9 @@ users of C<Carp::Datum>.
 
 =head1 AUTHORS
 
-Christophe Dehaudt F<E<lt>christophe@dehaudt.orgE<gt>>
-and
-Raphael Manfredi F<E<lt>Raphael_Manfredi@pobox.comE<gt>>.
+Christophe Dehaudt and Raphael Manfredi are the original authors.
+
+Send bug reports, hints, tips, suggestions to Dave Hoover at <squirrel@cpan.org>.
 
 =head1 SEE ALSO
 

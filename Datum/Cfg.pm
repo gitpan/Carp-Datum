@@ -416,15 +416,15 @@ Carp::Datum::Cfg - Dynamic Debug Configuration Setting for Datum
 
 =head1 DESCRIPTION
 
-By using DLOAD_CONFIG function in your application's main file, 
-a debugging configuration can be dynamically loaded to define particular
-level of debug/trace flags for specific sub-part of code.
+By using the DLOAD_CONFIG function in an application's main file, 
+a debugging configuration can be dynamically loaded to define a particular
+level of debug/trace flags for a specific sub-part of code.
 
-For instance, the tracing can be turned off when entering in a routine
-of a designated package. That is very useful to concentrate the
-debugging onto the area that is presently developped and/or to filter
+For instance, the tracing can be turned off when entering a routine
+of a designated package. That is very useful for concentrating the
+debugging onto the area that is presently developed and/or to filter
 some verbose parts of code (recursive function call), when they don't
-require to be monitored to fix the problem.
+need to be monitored to fix the problem.
 
 =head1 EXAMPLE
 
@@ -523,7 +523,7 @@ traced as coming from file C<E<lt>CGIE<gt>/Carp.pm>, which is nicer to read.
 
 The I<BLOCK> defines the flags to be applied to all named clusters.
 A cluster is a set of classes under a given name scope.
-Cluster names are given by strings withing double quotes, as in:
+Cluster names are given by strings within double quotes, as in:
 
     cluster "CGI::MxScreen", "Net::MsgLink" { use silent; }
 
@@ -549,9 +549,9 @@ For instance:
     default silent;
 
 would say that the flags to apply by default are the ones defined by an
-earlier C<flags silent> directive.  Not expansing defaults allows for
-quick switching by replacing I<silent> with I<verbose>.  It is up to you
-to define what you mean by that though.
+earlier C<flags silent> directive.  Not expanding defaults allows for
+quick switching by replacing I<silent> with I<verbose>.  It is up to the
+module user to define what is meant by that though.
 
 =item C<file> I<name1>, I<name2> I<BLOCK>
 
@@ -595,7 +595,7 @@ A flag symbol must be defined prior being used.
 =item C<routine> I<name1>, I<name2> I<BLOCK>
 
 The I<BLOCK> defines the flags to be applied to all named routines.
-Routine names are given by strings withing double quotes, as in:
+Routine names are given by strings within double quotes, as in:
 
     routine "foo", "bar" { use silent; }
 
@@ -677,10 +677,10 @@ Enable or disables B<all> the previously described items.
 =head2 Assertion Evaluation Note
 
 When C<Carp::Datum> is switched off, the assertions are always monitored,
-and any failure is fatal.  This is because a failing assertion is a bad thing
-in production mode, and also because since C<DREQUIRE> and friends are not
-C macros but routines, the assertion expression is evaluated anyway, so we
-might as well test it.
+and any failure is fatal.  This is because a failing assertion is a Bad Thing
+in production mode. Also, since C<DREQUIRE> and friends are not
+C macros but routines, the assertion expression is evaluated anyway, so
+it might as well be tested.
 
 Therefore, a directive like:
 
@@ -705,7 +705,7 @@ Here is the list of trace flags that can be specified by the configuration:
              info    TRC_INFO
             debug    TRC_DEBUG
 
-You can say something like:
+A user could say something like:
 
     trace(no): all;
     trace(yes): emergency, alert, critical, error;
@@ -715,13 +715,13 @@ flags to off, the second enables only the listed ones.
 
 =head1 BUGS
 
-Some things are not fully documented, and the grammar needs to be explicited.
+Some things are not fully documented.
 
 =head1 AUTHORS
 
-Christophe Dehaudt F<E<lt>Christophe.Dehaudt@teamlog.frE<gt>>
-and
-Raphael Manfredi F<E<lt>Raphael_Manfredi@pobox.comE<gt>>.
+Christophe Dehaudt and Raphael Manfredi are the original authors.
+
+Send bug reports, hints, tips, suggestions to Dave Hoover at <squirrel@cpan.org>.
 
 =head1 SEE ALSO
 

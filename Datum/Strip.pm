@@ -209,8 +209,8 @@ The general guidelines are:
 
 =item *
 
-Do not use here documents or generalized quotes (qq) within your
-assertion expression or tags.  Write your assertions using '' or "",
+Do not use here documents or generalized quotes (qq) within 
+assertion expression or tags.  Write assertions using '' or "",
 as appropriate.
 
 =item *
@@ -221,8 +221,8 @@ outside any string.
 =back
 
 There are two calls that will never be stripped: VERIFY() and DTRACE().
-The VERIFY() is meant to be preserved (or you would have used C<DREQUIRE>),
-and C<DTRACE>, when called, will be remapped dynamically to some
+The VERIFY() is meant to be preserved (or C<DREQUIRE> would have been used).
+C<DTRACE>, when called, will be remapped dynamically to some
 C<Log::Agent> routine, depending on the trace level.  See L<Carp::Datum>
 for details.
 
@@ -255,9 +255,9 @@ Returns true on success, C<undef> on error.
 
 =head1 AUTHORS
 
-Christophe Dehaudt F<E<lt>christophe@dehaudt.orgE<gt>>
-and
-Raphael Manfredi F<E<lt>Raphael_Manfredi@pobox.comE<gt>>.
+Christophe Dehaudt and Raphael Manfredi are the original authors.
+
+Send bug reports, hints, tips, suggestions to Dave Hoover at <squirrel@cpan.org>.
 
 =head1 SEE ALSO
 

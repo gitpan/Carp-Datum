@@ -632,14 +632,14 @@ Carp::Datum - Debugging And Tracing Ultimate Module
 =head1 DESCRIPTION
 
 The C<Carp::Datum> module brings powerful debugging and tracing features
-to your development code: automatic flow tracing, returned value tracing,
+to development code: automatic flow tracing, returned value tracing,
 assertions, and debugging traces.  Its various functions may be customized
 dynamically (i.e. at run time) via a configuration language allowing
-selective activation on a routines, file, or object type basis.  See
+selective activation on a routine, file, or object type basis.  See
 L<Carp::Datum::Cfg> for configuration defails.
 
 C<Carp::Datum> traces are implemented on top of C<Log::Agent> and go to its
-debugging channel.  This lets the application have full control on the
+debugging channel.  This lets the application have full control of the
 final destination of the debugging information (logfile, syslog, etc...).
 
 C<Carp::Datum> can be globally turned on or off by the application.  It is
@@ -656,8 +656,8 @@ can make use of C<Carp::Datum::MakeMaker> in their Makefile.PL to
 request stripping at build time.  See L<Carp::Datum::MakeMaker> for
 instructions.
 
-Here is a small example showing how traces look like, and what happens by
-default on assertion failure.  Since we're not customizing C<Log::Agent>, the
+Here is a small example showing what traces look like, and what happens by
+default on assertion failure.  Since C<Log::Agent> is not being customized, the
 debugging channel is STDERR.  In real life, one would probably
 customize Log::Agent with a file driver, and redirect the debug channel
 to a file separate from both STDOUT and STDERR.
@@ -717,7 +717,7 @@ The last three lines were manually re-ordered for this manpage: because of the
 pre-condition failure, Perl enters its global object destruction routine,
 and the destruction order of the lexicals is not right.  The $f_ in show_inv()
 is destroyed before the one in inv(), resulting in the inversion.  To better
-please the eye, we fixed it.  And the PANIC is emitted when the pre-condition
+please the eye, it has been fixed.  And the PANIC is emitted when the pre-condition
 failure is detected, but it would have messed up the trace example.
 
 Note that the stack dump is prefixed with the "!!" token, and the fatal
@@ -727,7 +727,7 @@ troubles in logfiles by catching the eye.
 Routine entry and exit are tagged, returned values and parameters are
 shown, and the immediate caller of each routine is also traced.  The
 final tags C<from global at ./demo:7 [./demo:10]> refer to the file
-name (here the script I used was called "demo") and the line number
+name (here the script used was called "demo") and the line number
 where the call to the C<Carp::Datum> routine is made: here the
 C<DFEATURE> at line 10. It also indicates the caller origin: here, the
 call is made at line 7 of file C<demo>.
@@ -735,7 +735,7 @@ call is made at line 7 of file C<demo>.
 The special name "global" (without trailing () marker) is used to indicate
 that the caller is the main script, i.e. there is no calling routine.
 
-Returned values in inv() are traced a "(0.5)" and "(2)", and not as "0.5"
+Returned values in inv() are traced as "(0.5)" and "(2)", and not as "0.5"
 and "2" as one would expect, because the routine was called in non-scalar
 context (within a print statement).
 
@@ -749,9 +749,9 @@ natively in the Eiffel language.  It is very simple, yet extremely powerful.
 
 Each feature (routine) of a program is viewed externally as a supplier for
 some service.  For instance, the sqrt() routine computes the square root
-of any positive number for us.  We might do the computation ourselves, but
+of any positive number.  The computation could be verified, but
 sqrt() probably provides an efficient algorithm for that, and it has already
-been written and validated for us.
+been written and validated.
 
 However, sqrt() is only defined for positive numbers.  Giving a negative
 number to it is not correct.  The old way (i.e. in the old days before
@@ -764,7 +764,7 @@ determine whether an error had occurred.  Here it is easy, but in languages
 where no out-of-band value such as Perl's C<undef> are implemented, it can
 be quite difficult to both report an error and return a result.
 
-With Programming by Contract, the logic is reversed, and the code is really
+With Programming by Contract, the logic is reversed, and the code is greatly
 simplified:
 
 =over 4
@@ -781,17 +781,17 @@ In return, sqrt() promises to always return the square root of its argument.
 =back
 
 What are the benefits of such a gentlemen's agreement?  The code of the sqrt()
-routine is much simpler (whic means has fewer bugs) because it does not have
+routine is much simpler (meaning fewer bugs) because it does not have
 to bother with handling the case of negative arguments, since the caller
 promised to never call with such invalid values.  And the code of the caller
 is at worst as complex as before (one test to check that the argument is
-positive, against a check for an error code) and at best less complex: if we
-know that the value is positive, we don't even have to check, for instance if
-it is the result of an abs() call.
+positive, against a check for an error code) and at best less complex: if it is
+known that the value is positive, it doesn't even have to be checked, for instance
+if it is the result of an abs() call.
 
 But if sqrt() is called with a negative argument, and there's no explicit test
-in sqrt() to trap the case, what happens if we're giving sqrt() a negative
-value, despite our promise never to do so?  Well, it's a bug, and it's a
+in sqrt() to trap the case, what happens if sqrt() is given a negative
+value, despite a promise never to do so?  Well, it's a bug, and it's a
 bug in the caller, not in the sqrt() routine.
 
 To find those bugs, one usually monitors the assertions (pre- and
@@ -840,8 +840,8 @@ internal attributes.
 Furthermore, in object-oriented programming, a redefined feature must I<weaken>
 the pre-condition of its parent feature and I<strengthen> its post-condition.
 It can also keep them as-is.  To fully understand why, it's best to read
-Meyer.   Intuitively, it's easy to understand why the pre-condition cannot
-be strengthen, nor why the post-condition cannot be weakened: because of dynamic
+Meyer.  Intuitively, it's easy to understand why the pre-condition cannot
+be strengthened, nor why the post-condition cannot be weakened: because of dynamic
 binding, a caller of r() only has the static type of the object, not its
 dynamic type.  Therefore, it cannot know in advance which of the routines will
 be called amongst the inheritance tree.
@@ -856,29 +856,29 @@ Do not write both a pre-condition and a test with the same expression.
 
 =item *
 
-Never write a pre-condition when you wish to validate user input!
+Never write a pre-condition when trying to validate user input!
 
 =item *
 
 Never write a test on an argument when failure means an error, use a
 pre-condition.
 
-If your pre-condition is so important that you would like to always
-monitor it, even within the released product, then C<Carp::Datum>
-provides you with C<VERIFY>, a pre-condition that will always be checked
-(i.e. never stripped by C<Carp::Datum::Strip>).  Use it to protect the
-external interface of your module against abuse.
+If a pre-condition is so important that it needs to always be
+monitored, even within the released product, then C<Carp::Datum>
+provides C<VERIFY>, a pre-condition that will always be checked
+(i.e. never stripped by C<Carp::Datum::Strip>).  It can be used to protect
+the external interface of a module against abuse.
 
 =head2 Implementation
 
 With Carp::Datum, pre-conditions can be given using C<DREQUIRE> or C<VERIFY>.
 Assertions are written with C<DASSERT> and post-conditions given by C<DENSURE>.
 
-Although you could technically do with only C<DASSERT> to express all your
-assertion, stating whether it's a pre-condition with C<DREQUIRE> also has
+Although all assertions could be expressed with only C<DASSERT>,
+stating whether it's a pre-condition with C<DREQUIRE> also has
 a commentary value for the reader.  Moreover, one day, there might be an
 automatic tool to extract the pre- and post-conditions of all the routines
-for documentation purposes, and if all your assertions are called C<DASSERT>,
+for documentation purposes, and if all assertions are called C<DASSERT>,
 the tool will have a hard time figuring out which is what.
 
 Moreover, remember that a pre-condition failure I<always> means a bug in the
@@ -895,10 +895,10 @@ If only for that, it's worth making the distinction.
 
 =item DFEATURE my $f_, I<optional comment>
 
-This statement marks the very top of any routine.  Do not ommit the C<my>
+This statement marks the very top of any routine.  Do not omit the C<my>
 which is very important to ensure that what is going to be stored in the
 lexically scoped $f_ variable will be destroyed when the routine ends.
-You can use any name for that lexical, but we recommend that name as being
+Any name can be used for that lexical, but $f_ is recommended because it is
 both unlikely to conflict with any real variable and short.
 
 The I<optional comment> part will be printed in the logs at routine entry
@@ -907,13 +907,13 @@ grep'ing in the logs afterwards.
 
 =item return DVOID
 
-Use this when you would otherwise return from the routine by saying C<return>.
+This can be used in place of an ordinary C<return> from a routine.
 It allows tracing of the return statement.
 
 =item return DVAL I<scalar>
 
 Use this form when returning something in scalar context.  Do not put any
-parenthesis around your I<scalar>, or it will be incorrectly stripped
+parentheses around I<scalar>, or it will be incorrectly stripped
 by C<Carp::Datum::Strip>.  Examples:
 
     return DVAL 5;                      # OK
@@ -934,13 +934,13 @@ Using DARY allows tracing of the returned values.
 
     return DARY @x;
 
-When you have a routine returning something different depending on its
-calling context, then you have to write:
+If a routine returns something different depending on its
+calling context, then write:
 
     return DARY @x if wantarray;
     return DVAL $x;
 
-Be very careful with that, otherwise your program will behave differently
+Be very careful with that, otherwise the program will behave differently
 when the C<DARY> and C<DVAL> tokens are stripped by C<Carp::Datum::Strip>,
 thereby raising subtle bugs.
 
@@ -953,18 +953,18 @@ thereby raising subtle bugs.
 =item C<DREQUIRE> I<expr>, I<tag>
 
 Specify a pre-condition I<expr>, along with a I<tag> that will be printed
-whenever the pre-condition fails, i.e. when I<expr> evaluates to false.  You
-may use the I<tag> string to actually dump faulty value, for instance:
+whenever the pre-condition fails, i.e. when I<expr> evaluates to false.
+The I<tag> string may be used to dump faulty values, for instance:
 
     DREQUIRE $x > 0, "x = $x positive";
 
-The I<tag> is optional and may be left of.
+The I<tag> is optional and may be left off.
 
 =item C<VERIFY> I<expr>, I<tag>
 
 This is really the same as C<DREQUIRE>, except that it will not be stripped
-by C<Carp::Datum::Strip> and that it will always be monitored and causing a
-fatal error, whatever dynamic configuration you setup.
+by C<Carp::Datum::Strip> and that it will always be monitored and cause a
+fatal error, whatever dynamic configuration is setup.
 
 =item C<DENSURE> I<expr>, I<tag>
 
@@ -995,9 +995,8 @@ second call emits a warning at the C<TRC_WARNING> level, and the last call
 emits a C<TRC_CRITICAL> message prefixed with a marker.
 
 Markers are 2-char strings emitted in the very first columns of the
-debugging output, and can be used to put emphasis on some particular
-important messages.  Internally, C<Carp::Datum> and C<Log::Agent> use the
-following markers:
+debugging output, and can be used to put emphasis on specifice messages.
+Internally, C<Carp::Datum> and C<Log::Agent> use the following markers:
 
     !!    assertion failure and stack trace
     **    critical errors, fatal if not trapped by eval {}
@@ -1017,7 +1016,7 @@ and how they remap to C<Log::Agent> routines when C<Carp::Datum> is off:
     TRC_INFO        logtrc "info"
     TRC_DEBUG       logtrc "debug"
 
-If your application does not configure C<Log::Agent> specially, all the calls
+If an application does not configure C<Log::Agent> specifically, all the calls
 map nicely to perl's native routines (die, warn and print).
 
 =head2 Convenience Routines
@@ -1057,17 +1056,17 @@ followed:
 
 When C<Carp::Datum> is turned off, most of the specific functions
 (DFEATURE, ...) continue to be invoked during the program execution
-but they immediately return. In details, all the tracing functions are
+but they return immediately. In details, all the tracing functions are
 disconnected, the contracts (DASSERT, DREQUIRE, DENSURE) continue to
 be verified: assertion failure will stop the program.
 
 That leads to a tiny perfomance loss when running production
 release. But, the delivered code keeps the possibility to be easily
-debug. There is, however, a stripper program that can extract all the
-C<Carp::Datum> calls from a source file and, then regain in
-performance (see L<Carp::Datum::Strip>).
+debugged. If the performance would be problematic in a production
+release, there is a stripper program available that can extract all the
+C<Carp::Datum> calls from a source file. (see L<Carp::Datum::Strip>).
 
-To turn on/off the debug according to an environment variable, the  
+To turn on/off debugging according to an environment variable, the  
 module can be imported like the following:
 
  # In application's main
@@ -1081,7 +1080,7 @@ module can be imported like the following:
 =head2 Dynamic Configuration
 
 The dynamic configuration is loaded when the C<DLOAD_CONFIG> function
-is invoked in the main program. The function signature allows to pass
+is invoked in the main program. The function signature passes
 either a filename or directly a string (or both). 
 
  DLOAD_CONFIG(-file => "./debug.cf")  # filename
@@ -1117,41 +1116,41 @@ cannot be used.
 
 =head1 BUGS
 
-Please report them to the authors.
+Please report any bugs to the current maintainer.
 
 =head1 HISTORY AND CREDITS
 
-The seed of the C<Carp::Datum> module has started to grow in 1996 when
-Raphael and I were involved into a quite tricky development in a kernel
-environment. It was the first time I heard about I<Programming By Contract>
-principles. For Raphael, the concept was already known since
-he participated to the development of the Eiffel compiler.
+The seed of the C<Carp::Datum> module started to grow in 1996 when
+Raphael Manfredi and Christophe Dehaudt were involved in a tricky
+project involving kernel environment. It was Christophe's first experience
+with I<Programming By Contract> principles. Raphael was already familar with
+the concept due to his participation in the development of the
+Eiffel compiler.
 
 Written in C, the first release was based on pre-processor macros. It
 already distinguished the pre-conditions, post-conditions and
-assertions. There were also the concept of dynamic configuration and
+assertions. Also included were the concepts of dynamic configuration and
 flow tracing. The benefit of this lonely include file was very
 important since the final integration was very short and, since then,
-there was no major bug reported on the delivered product.
+there has been no major bug reported on the delivered product.
 
-Based on this first success, we leveraged the technics for
-developments in C++ language. The debug module was upgraded with the
+Based on this first success, they leveraged the techniques for
+developments in C++. The debug module was upgraded with the
 necessary notions required for true OO programming in C++.
 
-The Perl module was produced in 2000, when Raphael and I needed for Perl the
-same powerful support that we had initiated a few years ago.
-Before the first official release in spring 2001, we developped
+The Perl module was produced in 2000, when Raphael and Christophe needed
+for Perl the same powerful support that they had initiated a few years prior.
+Before the first official release in spring 2001, they developed
 several other Perl modules and applications (mainly related to CGI
 programming) that were powered by C<Carp::Datum>. Some of them have
 also been published in CPAN directory (for instance:
 C<CGI::Mxscreen>).
 
-
 =head1 AUTHORS
 
-Christophe Dehaudt F<E<lt>christophe@dehaudt.orgE<gt>>
-and
-Raphael Manfredi F<E<lt>Raphael_Manfredi@pobox.comE<gt>>.
+Christophe Dehaudt and Raphael Manfredi are the original authors.
+
+Send bug reports, hints, tips, suggestions to Dave Hoover at <squirrel@cpan.org>. 
 
 =head1 SEE ALSO
 

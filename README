@@ -1,4 +1,5 @@
                           Carp::Datum 0.1
+     Copyright (c) 2002, Dave Hoover
      Copyright (c) 2000-2001, Christophe Dehaudt & Raphael Manfredi
 
 ------------------------------------------------------------------------
@@ -28,7 +29,7 @@ Carp::Datum    adpf  Debugging And Tracing Ultimate Module        CDE
 ========================================================================
 
 This module is the Perl version of a C/C++ library, called DATUM, which
-we have been using in many programs since 1996.
+Christophe Dehaudt & Raphael Manfredi used in many programs since 1996.
 
 Following is the preamble to the DATUM library, written by Raphael in 1998:
 
@@ -90,10 +91,9 @@ where one would otherwise use a test like:
 
 in regular code.
 
-Over the years, we have found DATUM to be a very valuable aid in large
-software, especially in situations where the bug tolerence is zero: OS
-modules, DB access/replication modules.  We hope you will enjoy it.
+Over the years, the original authors found DATUM to be a very valuable
+aid in large software, especially in situations where the bug tolerence
+is zero: OS modules, DB access/replication modules.
 
--- Christophe Dehaudt <christophe@dehaudt.org>
--- Raphael Manfredi <Raphael_Manfredi@pobox.com>
-
+Send bug reports, hints, tips, suggestions to Dave Hoover at
+<squirrel@cpan.org>.
